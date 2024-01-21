@@ -498,15 +498,6 @@ void menu(){
     system("cls");
     char opt11 = ' ';
     FILE *f1;
-    /*char *folder = "users\\";
-    strcat(folder,usr1.customerID);
-    strcat(folder, ".dat");
-    f1 = fopen(folder, "w+");
-    fseek(f1, 0, SEEK_SET);
-    fprintf(f1, USER_INFO_OUT, usr1.fullname, usr1.TCID, usr1.email, usr1.phone, usr1.gender, usr1.address, usr1.password, usr1.customerID, usr1.balance, usr1.savings, usr1.debt);
-    fseek(f1, 0, SEEK_SET);
-    fscanf(f1, USER_INFO_IN, usr1.fullname, usr1.TCID, usr1.email, usr1.phone, &usr1.gender, usr1.address, usr1.password,usr1.customerID, &usr1.balance, &usr1.savings, &usr1.debt);
-    fclose(f1);*/
     printf("\n\n\t-------------------- ||MAIN MENU|| --------------------\n\n");
     printf("\n\tOptions:\n\t1.View Account Information:\n\t2.Edit Account:\n\t3.Widthdraw Money:\n\t4.Deposit Money:\n\t5.Send Money\n\t6.Exit\n\tChoose An Option:\t");
     opt11 = getch();
