@@ -244,6 +244,7 @@ void registar(){
     
     }
 }
+//---------------------------- EDIT ACCOUNT FUNCTION ---------------------------------------
 void editaccount(){
     FILE *f1;
     char folder[100] = "users\\";
@@ -255,7 +256,6 @@ void editaccount(){
     printf("\n\tOptions:\n\t1.Phone:\n\t2.Address:\n\t3.Password:\n\tChoose An Option:\t");
     char op2;
     char op1;
-    fgetc(stdin);
     scanf("%c", &op2);
     if(op2 == '1'){
         printf("\n\n\tEnter New Phone Number:\t");
@@ -277,6 +277,7 @@ void editaccount(){
         Sleep(3000);
         editaccount();
     }
+    dataout(usr1.customerID);
     printf("\n\tDo You want To Continue?(y/n)");
     scanf("%c", &op1);
     switch (op1)
@@ -296,6 +297,8 @@ void editaccount(){
         }
 
 }
+
+//--------------------------------------------------- WITHDRAW MONEY FROM ACCOUNT ------------------------------------------
 void withdrawal(){
     double withdraw = 0;
     system("cls");
@@ -308,9 +311,9 @@ void withdrawal(){
         usr1.balance -= withdraw;
         printf("\n\tWithdrawal Successful!");
         data = fopen(datafolder,"a+");
-        fprintf(data,TRANSACTION,usr1.fullname,"Withdrawal completed",withdraw,"");
+        fprintf(data,TRANSACTION,usr1.customerID,"Withdrawal completed",withdraw,"USD");
         fclose(data);
-        //dataout();
+        dataout(usr1.customerID);
         menu();
 
     }
@@ -322,7 +325,10 @@ void withdrawal(){
     }
     
 }
+
+//------------------------------------------- DEPOSIT MONEY TO ACCOUNT -----------------------------------------
 void deposit(){
+    system("cls");
     printf("\n\n\t-------------------- ||DEPOSIT MONEY|| --------------------\n\n");
     printf("\n\tYour Balance: %.2lf" ,usr1.balance);
     printf("\n\tDeposit Amount: \t");
@@ -331,63 +337,120 @@ void deposit(){
     usr1.balance += depo;
     printf("\n\tDeposit Successful!");
     data = fopen(datafolder,"a+");
-    fprintf(data,TRANSACTION,usr1.fullname,"Deposit completed",depo,"");
+    fprintf(data,TRANSACTION,usr1.customerID,"Deposit completed",depo,"USD");
     fclose(data);
-    dataout();
+    dataout(usr1.customerID);
     menu();
 }
+//--------------------------------------- TRANSFER MONEY --------------------------------------------------------------------
 void transfer(){
+    system("cls");
     printf("\n\n\t-------------------- ||TRANSFER MONEY|| --------------------\n\n");
     FILE *user2;
     printf("\n\tYour Balance: %.2lf" ,usr1.balance);
-    printf("\n\tTransfer Amount: \t");
-    double trans;
-    scanf("%lf",&trans);
-    printf("\n\tThe Transfer Account:\t");
-    user usr2;
-    fgetc(stdin);
-    takeinput(usr2.customerID);
-    char folder1[100] = "users\\";
-    strcat(folder1,usr2.customerID);
-    strcat(folder1, ".dat");
-    user2 = fopen(folder1, "r");
-    if(user2 == NULL){
-        printf("Sorry This Acc Doesn't exist");
-        menu();
-    }
-    else{
-        fseek(user2, 0, SEEK_SET);
-        fscanf(user2, USER_INFO_IN, usr2.fullname, usr2.TCID, usr2.email, usr2.phone, &usr2.gender, usr2.address, usr2.password,usr2.customerID, &usr2.balance, &usr2.savings, &usr2.debt);
-        fclose(user2);
-        remove(folder1);
-        
-        if(trans <= usr1.balance){
+    printf("\n\tYour Balance: %.2lf\n\n" ,usr1.savings);
+    printf("\n\tChoose An Option:\n\t1. Transfer To Savings Account\n\t2. Transfer From Savings Account\n\t3. Transfer To Anouther Account\n\tEnter an Option:\t");
+    char opttransfer = ' ';
+    opttransfer = getch();
+    system("cls");
+    switch (opttransfer)
+    {
+    case '1':
+        printf("\n\n\t-------------------- ||TRANSFER TO SAVINGS|| --------------------\n\n");
+        printf("\n\tTransfer Amount: \t");
+        double trans;
+        scanf("%lf",&trans);
+        if (trans <= usr1.balance)
+        {
             usr1.balance -= trans;
-            usr2.balance += trans;
-            FILE *fout;
-            char *folder = "users\\";
-            strcat(folder,usr1.customerID);
-            strcat(folder,".dat");
-            remove(folder);
-            fout = fopen(folder, "w+");
-            fprintf(fout, USER_INFO_OUT, usr1.fullname, usr1.TCID, usr1.email, usr1.phone, usr1.gender, usr1.address, usr1.password, usr1.customerID, usr1.balance, usr1.savings, usr1.debt);
-            fclose(fout);
-            user2 = fopen(folder1, "w+");
-            fprintf(user2, USER_INFO_OUT, usr2.fullname, usr2.TCID, usr2.email, usr2.phone, usr2.gender, usr2.address, usr2.password, usr2.customerID, usr2.balance, usr2.savings, usr2.debt);
-            fclose(user2);
-            data = fopen(datafolder,"a+");
-            fprintf(data,TRANSACTION,usr1.customerID,"Transfer completed",trans,usr2.customerID);
-            fclose(data);
+            usr1.savings += trans;
+            dataout(usr1.customerID);
+            printf("\n\tTransfer Completed! You can check your account details from the menu!");
+            Sleep(1500);
             menu();
+        }
+        else{
+            printf("\n\tSorry something went wrong! Please try again later.");
+            Sleep(1500);
+            menu();
+        }
+        
+        break;
+    case '2':
+        printf("\n\n\t-------------------- ||TRANSFER FROM SAVINGS|| --------------------\n\n");
+        printf("\n\tTransfer Amount: \t");
+        double transa;
+        scanf("%lf",&transa);
+        if (transa <= usr1.savings)
+        {
+            usr1.balance += transa;
+            usr1.savings -= transa;
+            dataout(usr1.customerID);
+            printf("\n\tTransfer Completed! You can check your account details from the menu!");
+            Sleep(1500);
+            menu();
+        }
+        else{
+            printf("\n\tSorry something went wrong! Please try again later.");
+            Sleep(1500);
+            menu();
+        }
+        
+        break;
+    case '3':
+        printf("\n\tTransfer Amount: \t");
+        double transx;
+        scanf("%lf",&transx);
+        printf("\n\tThe Transfer Account:\t");
+        user usr2;
+        fgetc(stdin);
+        takeinput(usr2.customerID);
+        char folder1[100] = "users\\";
+        strcat(folder1,usr2.customerID);
+        strcat(folder1, ".dat");
+        user2 = fopen(folder1, "r");
+        if(user2 == NULL){
+            printf("Sorry This Account Doesn't exist");
+            menu();
+        }
+        else{
+            fseek(user2, 0, SEEK_SET);
+            fscanf(user2, USER_INFO_IN, usr2.fullname, usr2.TCID, usr2.email, usr2.phone, &usr2.gender, usr2.address, usr2.password,usr2.customerID, &usr2.balance, &usr2.savings, &usr2.debt);
+            fclose(user2);
+        
+            if(transx <= usr1.balance){
+                usr1.balance -= transx;
+                usr2.balance += transx;
+                dataout(usr1.customerID);
+                user2 = fopen(folder1, "w+");
+                fseek(user2, 0, SEEK_SET);
+                fprintf(user2, USER_INFO_OUT, usr2.fullname, usr2.TCID, usr2.email, usr2.phone, usr2.gender, usr2.address, usr2.password, usr2.customerID, usr2.balance, usr2.savings, usr2.debt);
+                fclose(user2);
+                data = fopen(datafolder,"a+");
+                fprintf(data,TRANSACTION,usr1.customerID,"Transfer completed",trans,usr2.customerID);
+                fclose(data);
+                printf("\nTransfer Completed!");
+                menu();
 
+
+            }
+            else{
+                menu();
+            }
 
         }
 
+    default:
+        menu();
+        break;
     }
+    
     
     
 
 }
+
+//-------------------------------------------------- VIEW ACCOUNT INFORMATION -------------------------------------------------
 void viewaccount(){
     char goback;
     system("cls");
@@ -416,10 +479,13 @@ void viewaccount(){
             break;
         }
 }
-void dataout(){
+
+
+//-------------------------------------------- WRITE TO FOLDER
+void dataout(char a[100]){
 FILE *fout;
-char *folder = "users\\";
-strcat(folder,usr1.customerID);
+char folder[100] = "users\\";
+strcat(folder,a);
 strcat(folder,".dat");
 remove(folder);
 fout = fopen(folder, "w+");
@@ -429,6 +495,7 @@ fclose(fout);
 }
 
 void menu(){
+    system("cls");
     char opt11 = ' ';
     FILE *f1;
     /*char *folder = "users\\";
@@ -461,7 +528,9 @@ void menu(){
         transfer();
         break;
     case '6':
-        dataout();
+        dataout(usr1.customerID);
+        printf("\nThanks For Preferring Us!");
+        Sleep(1000);
         break;
     
     default:
