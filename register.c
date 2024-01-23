@@ -12,9 +12,13 @@
 void dataout();
 const char* USER_INFO_OUT = "(%s,%s,%s,%s,%c,%s,%s,%s,%.3lf,%.3lf,%.3lf)";
 const char* USER_INFO_IN = "(%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%lf,%lf,%lf)";
-const char* TRANSACTION = "(%s,%s,%.3lf,%s)\n";
+const char* TRANSACTION = "(%s,%s,%.3lf,%s)||%s||\n";
 char password2[100];
-void withdrawal();
+void withdrawal();     
+typedef struct debt
+{
+    int months;
+}debt;
 typedef struct user
 {
     char TCID[100];
@@ -37,13 +41,20 @@ void registar();
 void customerid(char *id);
 void menu();
 int main(){
-    
     srand(time(0));
     system("color 31");
     
     registar();
 
     return 0;
+}
+//------------------ GET CURRENT TIME -----------------------------------
+char *timeread(){
+    time_t t;
+    time(&t);
+    char *a = ctime(&t);
+    a[strcspn(a, "\n")] = 0;
+    return a;
 }
 
 //------------------Mistake Alarm Sound---------------------
@@ -176,16 +187,16 @@ void login(){
             takepassword(password2);
         }
         system("cls");
-        printf("Wellcome back %s...", usr1.fullname);
+        printf("\n\n\t\t||Wellcome Back %s...", usr1.fullname);
         Sleep(1000);
-        printf("\b \b");
-        Sleep(1000);
-        printf(".");
-        Sleep(1000);
-        printf("\b \b");
-        Sleep(1000);
-        printf(".");
-        Sleep(1000);
+        for (int i = 0; i < 3; i++){
+            for (int j = 0; j < 3; j++){
+                printf("\b \b");
+                Sleep(500);}
+            for (int k = 0; k <3; k++){
+                printf(".");
+                Sleep(1000);}
+        }
         system("cls");
         //uploaded menu animation
         menu();
@@ -310,8 +321,9 @@ void withdrawal(){
     if(withdraw<usr1.balance && withdraw>10){
         usr1.balance -= withdraw;
         printf("\n\tWithdrawal Successful!");
+        char *datenew = timeread();
         data = fopen(datafolder,"a+");
-        fprintf(data,TRANSACTION,usr1.customerID,"Withdrawal completed",withdraw,"USD");
+        fprintf(data,TRANSACTION,usr1.customerID,"Withdrawal completed",withdraw,"USD",datenew);
         fclose(data);
         dataout(usr1.customerID);
         menu();
@@ -335,9 +347,10 @@ void deposit(){
     double depo;
     scanf("%lf",&depo);
     usr1.balance += depo;
+    char *datenew = timeread();
     printf("\n\tDeposit Successful!");
     data = fopen(datafolder,"a+");
-    fprintf(data,TRANSACTION,usr1.customerID,"Deposit completed",depo,"USD");
+    fprintf(data,TRANSACTION,usr1.customerID,"Deposit completed",depo,"USD",datenew);
     fclose(data);
     dataout(usr1.customerID);
     menu();
@@ -398,6 +411,8 @@ void transfer(){
         
         break;
     case '3':
+        printf("\n\n\t-------------------- ||TRANSFER MONEY TO ACCOUNT|| --------------------\n\n");
+        printf("\n\tYour Balance: %lf", usr1.balance);
         printf("\n\tTransfer Amount: \t");
         double transx;
         scanf("%lf",&transx);
@@ -426,8 +441,9 @@ void transfer(){
                 fseek(user2, 0, SEEK_SET);
                 fprintf(user2, USER_INFO_OUT, usr2.fullname, usr2.TCID, usr2.email, usr2.phone, usr2.gender, usr2.address, usr2.password, usr2.customerID, usr2.balance, usr2.savings, usr2.debt);
                 fclose(user2);
+                char *datenew = timeread();
                 data = fopen(datafolder,"a+");
-                fprintf(data,TRANSACTION,usr1.customerID,"Transfer completed",trans,usr2.customerID);
+                fprintf(data,TRANSACTION,usr1.customerID,"Transfer completed",transx,usr2.customerID,datenew);
                 fclose(data);
                 printf("\nTransfer Completed!");
                 menu();
@@ -481,7 +497,7 @@ void viewaccount(){
 }
 
 
-//-------------------------------------------- WRITE TO FOLDER
+//-------------------------------------------- WRITE TO FOLDER --------------------------------------------------------
 void dataout(char a[100]){
 FILE *fout;
 char folder[100] = "users\\";
@@ -494,12 +510,31 @@ fclose(fout);
     
 }
 
+//-------------------------------------------------------Debt System Parts ----------------------------------------------
+//-------------------------------------------------------Get Loan -------------------------------------------------------
+void getloan(){
+    system("cls");
+    printf("\n\n\t-------------------- ||AVAILABLE LOANS|| --------------------\n\n");
+}
+//-------------------------------------------------------Make Payment ---------------------------------------------------
+void payloan(){
+
+}
+void loanmenu(){
+    system("cls");
+    printf("\n\n\t-------------------- ||LOAN OPERATIONS|| --------------------\n\n");
+
+}
+//---------------------------------------------END OF DEBT SYSTEM PARTS ---------------------------------------------------------------
+
+//------------------------------------------------------------- Enter The Main Menu -----------------------------------------------
 void menu(){
     system("cls");
     char opt11 = ' ';
     FILE *f1;
     printf("\n\n\t-------------------- ||MAIN MENU|| --------------------\n\n");
-    printf("\n\tOptions:\n\t1.View Account Information:\n\t2.Edit Account:\n\t3.Widthdraw Money:\n\t4.Deposit Money:\n\t5.Send Money\n\t6.Exit\n\tChoose An Option:\t");
+    char *b = timeread();
+    printf("\n\tOptions:\n\t1.View Account Information:\t\t\t\t%s\n\t2.Edit Account:\n\t3.Widthdraw Money:\n\t4.Deposit Money:\n\t5.Send Money\n\t6.Loan Operations\n\t7.Exit The Program\n\tChoose An Option:\t",b);
     opt11 = getch();
     switch (opt11)
     {
@@ -519,6 +554,9 @@ void menu(){
         transfer();
         break;
     case '6':
+        loanmenu();
+        break;
+    case '7':
         dataout(usr1.customerID);
         printf("\nThanks For Preferring Us!");
         Sleep(1000);
