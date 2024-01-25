@@ -523,7 +523,28 @@ void payloan(){
 void loanmenu(){
     system("cls");
     printf("\n\n\t-------------------- ||LOAN OPERATIONS|| --------------------\n\n");
-
+    char b[100] = "\n\n\tAVCI BANK is always with you! Whenever you need us, we are here to save you!";
+    char v[5][100] = {("Available Options  :"),("1 View Loan Options:"),("2 Apply For A Loan :"),("3 Loan Payment Op. :"),("U Choose An Option :\t")};
+    char line[100] = "\n\t-------------------\n\t";
+    for (int k = 0; k < 3; k++){
+        for (int i = 0; i < sizeof(b)/sizeof(b[0]); i++){
+        printf("%c",b[i]);
+        Sleep(100);}
+        for (int j = 0; j < sizeof(b)/sizeof(b[0]); j++){
+            printf("\b \b");
+            Sleep(100);}}
+    system("cls");
+    printf("\n\n\t-------------------- ||LOAN OPERATIONS|| --------------------\n\n\n\n\t");
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j < sizeof(v[i])/sizeof(v[i][0]); j++)
+        {
+            printf("%c",v[i][j]);
+            Sleep(80);
+        }
+        if(i<4) printf("%s", line);
+    }
+    char opt12 = getch();
 }
 //---------------------------------------------END OF DEBT SYSTEM PARTS ---------------------------------------------------------------
 
@@ -534,7 +555,7 @@ void menu(){
     FILE *f1;
     printf("\n\n\t-------------------- ||MAIN MENU|| --------------------\n\n");
     char *b = timeread();
-    printf("\n\tOptions:\n\t1.View Account Information:\t\t\t\t%s\n\t2.Edit Account:\n\t3.Widthdraw Money:\n\t4.Deposit Money:\n\t5.Send Money\n\t6.Loan Operations\n\t7.Exit The Program\n\tChoose An Option:\t",b);
+    printf("\n\tOptions:\n\t1.View Account Information:\t\t\t\t\t%s\n\t2.Edit Account:\n\t3.Widthdraw Money:\n\t4.Deposit Money:\n\t5.Send Money\n\t6.Loan Operations\n\t7.Exit The Program\n\tChoose An Option:\t",b);
     opt11 = getch();
     switch (opt11)
     {
