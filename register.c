@@ -514,7 +514,24 @@ fclose(fout);
 //-------------------------------------------------------Get Loan -------------------------------------------------------
 void getloan(){
     system("cls");
-    printf("\n\n\t-------------------- ||AVAILABLE LOANS|| --------------------\n\n");
+    printf("\n\n\t-------------------- ||INFORMATION SYSTEM|| --------------------\n\n\n\n\t");
+    char a[500] ="You will see the loan options in the next page. Please wait until all of them complete uploading. Than you should choose one of the options on the screen. You will directly get cash into your Balance account.\n\tDo you want to continue?(y/n):\t";
+    for (int i = 0; i < sizeof(a)/sizeof(a[0]); i++){
+        printf("%c",a[i]);
+        Sleep(100);}
+    char b = getch();
+    switch (b)
+    {
+    case 'y':
+    case 'Y':
+        printf("\n\n\t-------------------- ||AVAILABLE LOANS|| --------------------\n\n\t");
+        
+        break;
+    
+    default:
+        menu();
+    }
+    
 }
 //-------------------------------------------------------Make Payment ---------------------------------------------------
 void payloan(){
@@ -548,7 +565,7 @@ void loanmenu(){
 }
 //---------------------------------------------END OF DEBT SYSTEM PARTS ---------------------------------------------------------------
 
-//------------------------------------------------------------- Enter The Main Menu -----------------------------------------------
+//----------------------------------------------- Enter The Main Menu -----------------------------------------------------------------
 void menu(){
     system("cls");
     char opt11 = ' ';
