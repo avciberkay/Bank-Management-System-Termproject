@@ -525,7 +525,7 @@ void getloan(){
     case 'y':
     case 'Y':
         printf("\n\n\t-------------------- ||AVAILABLE LOANS|| --------------------\n\n\t");
-        
+
         break;
     
     default:
@@ -541,7 +541,7 @@ void loanmenu(){
     system("cls");
     printf("\n\n\t-------------------- ||LOAN OPERATIONS|| --------------------\n\n");
     char b[100] = "\n\n\tAVCI BANK is always with you! Whenever you need us, we are here to save you!";
-    char v[5][100] = {("Available Options  :"),("1 View Loan Options:"),("2 Apply For A Loan :"),("3 Loan Payment Op. :"),("U Choose An Option :\t")};
+    char v[5][100] = {("Available Options  :"),("1 Back To Main Menu:"),("2 Apply For A Loan :"),("3 Loan Payment Op. :"),("U Choose An Option :\t")};
     char line[100] = "\n\t-------------------\n\t";
     for (int k = 0; k < 3; k++){
         for (int i = 0; i < sizeof(b)/sizeof(b[0]); i++){
@@ -562,6 +562,21 @@ void loanmenu(){
         if(i<4) printf("%s", line);
     }
     char opt12 = getch();
+    switch (opt12)
+    {
+    case '1':
+        menu();
+        break;
+    case '2':
+        getloan();
+        break;
+    case '3':
+        payloan();
+        break;
+    default:
+        loanmenu();
+        break;
+    }
 }
 //---------------------------------------------END OF DEBT SYSTEM PARTS ---------------------------------------------------------------
 
